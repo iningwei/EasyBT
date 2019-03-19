@@ -34,10 +34,19 @@ namespace BTAI
         {
             return new Action(fn);
         }
+        /// <summary>
+        /// Depend on the given function "fn"
+        /// if fn returns true,it calls the current active child and return its state.
+        /// otherwise,it returns Failure without calling its children.
+        /// </summary>
+        /// <param name="fn"></param>
+        /// <returns></returns>
         public static ConditionalBranch If(System.Func<bool> fn)
         {
             return new ConditionalBranch(fn);
         }
+
+
         public static While While(System.Func<bool> fn)
         {
             return new While(fn);
@@ -141,6 +150,14 @@ namespace BTAI
         }
     }
 
+
+
+    /// <summary>
+    /// Execute child nodes one after another.If a child return:
+    /// Success:the sequence ticks the next child on the next frame.
+    /// Failure:the sequence returns to the first child on the next frame.
+    /// Continue:the sequence will still call the current child again on the next frame.
+    /// </summary>
     public class Sequence : Branch
     {
         public override BTState Tick()
@@ -171,11 +188,12 @@ namespace BTAI
     }
 
     /// <summary>
-    /// Execute each child until a child succeeds, then return success.
+    /// Execute each child in order until one return succeess, then return success(without executing the remaining children nodes).
     /// If no child succeeds, return a failure.
     /// </summary>
     public class Selector : Branch
     {
+        //if shuffle is true,it will random children index
         public Selector(bool shuffle)
         {
             if (shuffle)
@@ -447,6 +465,12 @@ namespace BTAI
         }
     }
 
+
+    /// <summary>
+    /// Execute a random child from its list of children every time it is called. 
+    /// You can specify a list of weights to apply to each child as an int array in the constructor, 
+    /// to make some children more likely to be picked.
+    /// </summary>
     public class RandomSequence : Block
     {
         int[] m_Weight = null;
