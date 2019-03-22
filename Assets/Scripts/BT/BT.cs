@@ -30,6 +30,12 @@ namespace BTAI
         {
             return new Action(coroutine);
         }
+
+        /// <summary>
+        /// Call the given function, which always returns Success.
+        /// </summary>
+        /// <param name="fn"></param>
+        /// <returns></returns>
         public static Action Call(System.Action fn)
         {
             return new Action(fn);
@@ -47,22 +53,61 @@ namespace BTAI
         }
 
 
+        /// <summary>
+        /// Return Continue as long as the given function returns true
+        /// (so the next frame when the tree is ticked,it starts from that node again without evaluating all the previous nodes).
+        /// Children are executed one after another.
+        /// Returns Failure when the function returns false and the loop is broken.
+        /// </summary>
+        /// <param name="fn"></param>
+        /// <returns></returns>
+
         public static While While(System.Func<bool> fn)
         {
             return new While(fn);
         }
+
+        /// <summary>
+        /// This node returns Success if the given function returns true, and returns Failure if false.
+        /// Useful when chained with other nodes that depend on their children’s result(e.g Sequence, Selector.)
+        /// </summary>
+        /// <param name="fn"></param>
+        /// <returns></returns>
+
         public static Condition Condition(System.Func<bool> fn)
         {
             return new Condition(fn);
         }
+
+        /// <summary>
+        /// Executes all child nodes a given number of times consecutively.
+        /// Returns Continue until it reaches the count, where it returns Success.
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static Repeat Repeat(int count)
         {
             return new Repeat(count);
         }
+
+        /// <summary>
+        /// Returns Continue until the given time has been reached (starting when first called), where it then returns Success.
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
         public static Wait Wait(float seconds)
         {
             return new Wait(seconds);
         }
+
+        /// <summary>
+        /// Allows the setting of a trigger (or unsetting of a trigger if the last argument is set to false) in the given animator. 
+        /// Always returns Success.
+        /// </summary>
+        /// <param name="animator"></param>
+        /// <param name="name"></param>
+        /// <param name="set"></param>
+        /// <returns></returns>
         public static Trigger Trigger(Animator animator, string name, bool set = true)
         {
             return new Trigger(animator, name, set);
@@ -71,10 +116,27 @@ namespace BTAI
         {
             return new WaitForAnimatorState(animator, name, layer);
         }
+
+        /// <summary>
+        /// Allows setting the value of a Boolean Parameter in the given animator. 
+        /// Always returns Success
+        /// </summary>
+        /// <param name="animator"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static SetBool SetBool(Animator animator, string name, bool value)
         {
             return new SetBool(animator, name, value);
         }
+
+        /// <summary>
+        /// Set active/inactive a given GameObject. 
+        /// Always returns Success.
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
         public static SetActive SetActive(GameObject gameObject, bool active)
         {
             return new SetActive(gameObject, active);
