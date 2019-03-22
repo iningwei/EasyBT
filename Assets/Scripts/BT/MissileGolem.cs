@@ -104,9 +104,7 @@ public class MissileGolem : MonoBehaviour
             BT.Repeat(rounds.Length).OpenBranch(
                 BT.Call(NextRound),
                 //grenade enabled is true only on 2 and 3 round, so allow to just test if it's the 1st round or not here
-                BT.If(GrenadeEnabled).OpenBranch(
-                    BT.Trigger(animator, "Enabled")
-                    ),
+                BT.If(GrenadeEnabled).OpenBranch(BT.Trigger(animator, "Enabled")),
                 BT.Wait(delay),
                 BT.Call(ActivateShield),
                 BT.Wait(delay),
