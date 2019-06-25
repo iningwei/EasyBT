@@ -112,6 +112,7 @@ namespace BTAI
         {
             return new Trigger(animator, name, set);
         }
+
         public static WaitForAnimatorState WaitForAnimatorState(Animator animator, string name, int layer = 0)
         {
             return new WaitForAnimatorState(animator, name, layer);
@@ -255,8 +256,15 @@ namespace BTAI
     /// </summary>
     public class Selector : Branch
     {
+        bool shuffle = false;
+        int tickCount = 0;
         //if shuffle is true,it will random children index
         public Selector(bool shuffle)
+        {
+            this.shuffle = shuffle;
+        }
+
+        void Shuffle()
         {
             if (shuffle)
             {
@@ -274,6 +282,12 @@ namespace BTAI
 
         public override BTState Tick()
         {
+            if (this.tickCount == 0)
+            {
+                this.Shuffle();
+            }
+            this.tickCount++;
+
             var childState = children[activeChild].Tick();
             switch (childState)
             {
@@ -820,9 +834,11 @@ namespace BTAI
         public override BTState Tick()
         {
             return BTState.Abort;
+
         }
 
     }
+
 
     public class Log : BTNode
     {
@@ -835,7 +851,7 @@ namespace BTAI
 
         public override BTState Tick()
         {
-            Debug.Log(msg);
+            Debug.Log(msg);//调用Unity Log接口
             return BTState.Success;
         }
     }
